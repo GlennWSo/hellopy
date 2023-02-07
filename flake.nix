@@ -23,7 +23,11 @@
           };
 
           devShell = pkgs.mkShell {
-            buildInputs = [ py.ipython ] ;
+            name = "hello-dev";
+            buildInputs = [ 
+            py.ipython
+            pkgs.nil
+            ] ;
           };
         }
       
