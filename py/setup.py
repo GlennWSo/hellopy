@@ -9,4 +9,7 @@ setup(
     author="It me!",
     author_email="gward@python.net",
     package_dir={"hello": "hello"},
+    entry_points={
+        "console_scripts": ["greet=hello.cli:run"],
+    },
 )

@@ -13,20 +13,22 @@
           inherit system;
         };
         py = pkgs.python39Packages;
+        mypackage = py.buildPythonPackage{ 
+            pname = "hello";
+            name = "hello";
+            src = ./py/.;  
+            # version = "0.0.1";
+            propagatedBuildInputs = [  py.numpy ];
+          };
       in
         {
-          defaultPackage = py.buildPythonPackage{ 
-            pname = "hello";
-            src = ./.;  
-            version = "0.0.1";
-            propagatedBuildInputs = [ py.flask ];
-          };
-
+          defaultPackage = mypackage;
           devShell = pkgs.mkShell {
             name = "hello-dev";
             buildInputs = [ 
-            py.ipython
-            pkgs.nil
+              pkgs.nil
+              py.ipython
+              mypackage  
             ] ;
           };
         }
