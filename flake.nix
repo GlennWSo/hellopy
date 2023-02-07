@@ -39,7 +39,7 @@
             src = ./.;  
             # version = "0.0.1";
             propagatedBuildInputs = [  py.numpy ]; # these will be availble both during build and runtime
-            # cargoDeps = rustPkg;
+            cargoDeps = rustPkg;
 
             # nativeBuildInputs = [ setupRust ] ++  [
             #   pkgs.rustPlatform.cargoSetupHook
