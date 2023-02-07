@@ -18,14 +18,14 @@
             name = "hello";
             src = ./py/.;  
             # version = "0.0.1";
-            propagatedBuildInputs = [  py.numpy ];
+            propagatedBuildInputs = [  py.numpy ]; # these will be availble both during build and runtime
           };
       in
         {
           defaultPackage = mypackage;
           devShell = pkgs.mkShell {
             name = "hello-dev";
-            buildInputs = [ 
+            buildInputs = [ # the default package ++ dev tool
               pkgs.nil
               py.ipython
               mypackage  
