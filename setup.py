@@ -8,5 +8,5 @@ setup(
     description="derp",
     author="It me!",
     author_email="gward@python.net",
-    package_dir=["hello"],
+    package_dir={"hello": "hello"},
 )
