@@ -18,13 +18,36 @@
           inherit overlays system;
         };
         py = pkgs.python39Packages;
+        setupRust = py.setuptools-rust;
         rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+        # rustPlatfrom = pkgs.rustPlatform;
+
+        rustPkg = pkgs.rustPlatform.buildRustPackage{
+            name = "hellorust";
+            src = ./.;
+            cargoLock = {
+              lockFile = ./Cargo.lock;
+            };
+            postPatch = ''
+              cp ${./Cargo.lock} Cargo.lock
+            '';
+        };
+        
         mypackage = py.buildPythonPackage{ 
             pname = "hello";
             name = "hello";
-            src = ./py/.;  
+            src = ./.;  
             # version = "0.0.1";
             propagatedBuildInputs = [  py.numpy ]; # these will be availble both during build and runtime
+            # cargoDeps = rustPkg;
+
+            # nativeBuildInputs = [ setupRust ] ++  [
+            #   pkgs.rustPlatform.cargoSetupHook
+            #   pkgs.rustPlatform.rust.cargo
+            #   pkgs.rustPlatform.rust.rustc
+            # ];
+
+            
           };
       in
         {
