@@ -1,6 +1,6 @@
 // use hellopy::greet;
-use pylibhello::greet;
+use rhello::rgreet;
 
 fn main() {
-    greet();
+    rgreet();
 }

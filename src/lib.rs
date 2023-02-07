@@ -1,18 +1,16 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+use pyo3::prelude::*;
 
 pub fn greet() {
     println!("Hello nix from rust!");
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[pyfunction]
+pub fn rgreet() {
+    greet();
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[pymodule]
+fn rhello(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(rgreet, m)?)?;
+    Ok(())
 }

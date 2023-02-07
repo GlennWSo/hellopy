@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
+from setuptools_rust import Binding, RustExtension
 
 setup(
     name="hello",
@@ -8,8 +9,19 @@ setup(
     description="derp",
     author="It me!",
     author_email="gward@python.net",
-    package_dir={"hello": "hello"},
-    entry_points={
-        "console_scripts": ["greet=hello.cli:run"],
-    },
+    rust_extensions=[
+        RustExtension(
+            "rhello.rhello",
+            binding=Binding.PyO3,
+        )
+    ],
+    packages=["rhello"],
+    # package_dir={
+    #     "hello": "hello",
+    #     # "rhello": "rhello",
+    # },
+    # entry_points={
+    #     "console_scripts": ["greet=hello.cli:run"],
+    # },
+    zip_safe=False,
 )
