@@ -11,11 +11,11 @@ setup(
     author_email="gward@python.net",
     rust_extensions=[
         RustExtension(
-            "rhello.rhello",
+            "hello.rhello",
             binding=Binding.PyO3,
         )
     ],
-    packages=["rhello"],
+    packages=["hello"],
     # package_dir={
     #     "hello": "hello",
     #     # "rhello": "rhello",

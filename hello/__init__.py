@@ -1,2 +1,1 @@
-def greet():
-    print("Hello Nix! from rust")
+from . import *
