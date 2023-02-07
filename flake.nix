@@ -23,11 +23,16 @@
         # rustPlatfrom = pkgs.rustPlatform;
 
         rustPkg = pkgs.rustPlatform.buildRustPackage{
+
             name = "hellorust";
             src = ./.;
             cargoLock = {
               lockFile = ./Cargo.lock;
             };
+            nativeBuildInputs = [
+              pkgs.python39
+            ];
+            # buildInputs = [py];
             # postPatch = ''
             #   cp ${./Cargo.lock} Cargo.lock
             # '';
@@ -41,11 +46,11 @@
             propagatedBuildInputs = [  py.numpy ]; # these will be availble both during build and runtime
             cargoDeps = rustPkg;
 
-            # nativeBuildInputs = [ setupRust ] ++  [
-            #   pkgs.rustPlatform.cargoSetupHook
-            #   pkgs.rustPlatform.rust.cargo
-            #   pkgs.rustPlatform.rust.rustc
-            # ];
+            nativeBuildInputs = [ setupRust ] ++  [
+              pkgs.rustPlatform.cargoSetupHook
+              pkgs.rustPlatform.rust.cargo
+              pkgs.rustPlatform.rust.rustc
+            ];
 
             
           };
