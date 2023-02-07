@@ -2,6 +2,10 @@ pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
+pub fn greet() {
+    println!("Hello nix from rust!");
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
