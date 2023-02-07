@@ -9,10 +9,10 @@
     in
     {
       packages = forAllSystems (system: {
-        default = pkgs.${system}.python39Packages.buildPythonPackage{ 
+        default = pkgs.${system}.python311Packages.buildPythonPackage{ 
           pname = "pyhello";
-          version = "0.13.37";
-          src = ./hello;  
+          src = ./.;  
+          version = "0.0.1";
         };
       });
 
