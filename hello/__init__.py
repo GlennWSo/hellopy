@@ -1,2 +1,2 @@
 def greet():
-    print("Hello, nix!")
+    print("Hello Nix! from rust")

@@ -28,12 +28,12 @@
             cargoLock = {
               lockFile = ./Cargo.lock;
             };
-            postPatch = ''
-              cp ${./Cargo.lock} Cargo.lock
-            '';
+            # postPatch = ''
+            #   cp ${./Cargo.lock} Cargo.lock
+            # '';
         };
         
-        mypackage = py.buildPythonPackage{ 
+        pypackage = py.buildPythonPackage{ 
             pname = "hello";
             name = "hello";
             src = ./.;  
@@ -51,14 +51,18 @@
           };
       in
         {
-          defaultPackage = mypackage;
+          packages.default = pypackage;
+          packages.rhello = rustPkg;
+          
+
           devShell = pkgs.mkShell {
             name = "hello-dev";
             buildInputs = [ # the default package ++ dev tool
               pkgs.nil
               py.ipython
-              mypackage  
+              pypackage  
               rust
+              rustPkg
             ] ;
           };
         }
