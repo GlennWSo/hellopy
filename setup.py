@@ -15,11 +15,9 @@ setup(
             binding=Binding.PyO3,
         )
     ],
-    packages=["hello"],
-    # package_dir={
-    #     "hello": "hello",
-    #     # "rhello": "rhello",
-    # },
+    # packages=["hello"],
+    # tell setup that the root python source is inside py folder
+    package_dir={"": "py"},
     # entry_points={
     #     "console_scripts": ["greet=hello.cli:run"],
     # },

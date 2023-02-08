@@ -28,15 +28,10 @@
             cargoLock = {
               lockFile = ./Cargo.lock;
             };
-
             
             nativeBuildInputs = [
               pkgs.python39
             ];
-            # buildInputs = [py];
-            # postPatch = ''
-            #   cp ${./Cargo.lock} Cargo.lock
-            # '';
             doCheck = false;
         };
         cargoDeps = pkgs.rustPlatform.importCargoLock {
@@ -47,7 +42,6 @@
             pname = "hello";
             name = "hello";
             src = ./.;  
-            # version = "0.0.1";
             propagatedBuildInputs = [  py.numpy ]; # these will be availble both during build and runtime
             cargoDeps = cargoDeps;
 
@@ -62,7 +56,7 @@
       in
         {
           packages.default = pypackage;
-          # packages.rhello = rustPkg;
+          packages.rhello = rustPkg;
           
 
           devShell = pkgs.mkShell {
@@ -74,7 +68,7 @@
               py.setuptools-rust
               pypackage  
               rust
-              # rustPkg
+              rustPkg
             ] ;
           };
         }
