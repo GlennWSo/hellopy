@@ -15,7 +15,7 @@ setup(
             binding=Binding.PyO3,
         )
     ],
-    # packages=["hello"],
+    packages=["hello"],
     # tell setup that the root python source is inside py folder
     package_dir={"": "py"},
     # entry_points={
