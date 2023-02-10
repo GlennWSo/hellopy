@@ -1,75 +1,64 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.rust-overlay = {
-    url = "github:oxalica/rust-overlay";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+  inputs =  {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    mach-nix.url = "mach-nix/3.5.0";
 
-  outputs = { self, nixpkgs, flake-utils, rust-overlay}:
+  };
+  inputs.rust-overlay =  {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+  outputs = { self, nixpkgs, flake-utils, mach-nix, rust-overlay }:
 
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
-        # forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-        # pkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
-        overlays = [(import rust-overlay)];
+        overlays = [ (import rust-overlay)];
         pkgs = import nixpkgs {
           inherit overlays system;
         };
         py = pkgs.python39Packages;
+        mach = mach-nix.lib.${system};
         setupRust = py.setuptools-rust;
         rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-        # rustPlatfrom = pkgs.rustPlatform;
 
-        rustPkg = pkgs.rustPlatform.buildRustPackage{
-            name = "hellorust";
-            src = ./.;
-            cargoLock = {
-              lockFile = ./Cargo.lock;
-            };
-            
-            nativeBuildInputs = [
-              pkgs.python39
-            ];
-            doCheck = false;
+        defaultPack = pkgs.callPackage ./default.nix { 
+          buildPythonPackage= py.buildPythonPackage;
+          lib = pkgs.lib;
+          rustPlatform = pkgs.rustPlatform;
+          setuptools-rust = py.setuptools-rust;
         };
-        cargoDeps = pkgs.rustPlatform.importCargoLock {
-          lockFile = ./Cargo.lock;
-        }; 
-        
-        pypackage = py.buildPythonPackage{ 
-            pname = "hello";
-            name = "hello";
-            src = ./.;  
-            propagatedBuildInputs = [  py.numpy ]; # these will be availble both during build and runtime
-            cargoDeps = cargoDeps;
 
-            nativeBuildInputs = [ setupRust ] ++  [
-              pkgs.rustPlatform.cargoSetupHook
-              pkgs.rustPlatform.rust.cargo
-              pkgs.rustPlatform.rust.rustc
-            ];
+         
 
-            
+        pyEnv = mach.mkPython {
+          requirements = ''
+            ipython
+            pyvista
+          '';
+          providers = {
+            _default = "wheel,nixpkgs,conda,sdist";
+            pyvista = "wheel";
           };
+          packagesExtra = [
+          ];
+        };
+       
       in
         {
-          packages.default = pypackage;
-          packages.rhello = rustPkg;
-          
+          packages.default =  defaultPack;
 
-          devShell = pkgs.mkShell {
-            name = "hello-dev";
-            buildInputs = [ # the default package ++ dev tool
-              pkgs.nil
+          devShell = pkgs.mkShell{
+            name = "pyrust";
+            buildInputs = [
+              defaultPack
               py.ipython
-              py.setuptools
-              py.setuptools-rust
-              pypackage  
+              pyEnv
+              pkgs.nil
               rust
-              rustPkg
-            ] ;
+              py.setuptools-rust
+            ];
           };
         }
       
